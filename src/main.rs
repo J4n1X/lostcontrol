@@ -242,7 +242,7 @@ fn main() {
                 list_repo(args);
             },
             "-s" | "stage" => {
-                if args.len() < 4 {
+                if args.len() < 3 {
                     println!("[ERROR] Not enough arguments specified!");
                     exit(1);
                 }

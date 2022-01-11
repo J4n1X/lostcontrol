@@ -262,19 +262,45 @@ impl Repo {
         }
     }
 
+    // TODO: Remove files that aren't part of the commit
+    // TODO: Check if commit id is valid
     pub fn restore_commit(&self, commit_id: usize) -> Result<(), ()>{
         if self.closed {
             dprintln!("[WARN] Repository {} is closed, skipping close!", self.name);
             return Err(());
         }
 
-        let restore_path = std::env::current_dir().unwrap();
+        let restore_path = std::fs::canonicalize(std::env::current_dir().unwrap()).unwrap();
         let branch_path = self.repos_dir.clone().join(self.current_branch.clone());
         let commit_path = branch_path.join(self.format_branch_dir(&self.get_branch(&self.current_branch).unwrap(), commit_id));
         dprintln!("[INFO] Restoring commit directory {}...", commit_path.display());
-        let files = expand_directory(&commit_path, &Vec::new());
+        let commit_files = expand_directory(&commit_path, &Vec::new());
+        let restore_dir_files = expand_directory(&restore_path, &self.ignored_files);
+        /*
+        for rest_file in restore_dir_files.iter() {
+            if !commit_files.contains(rest_file) && !self.ignored_files.contains(&rest_file.to_str().unwrap().to_string()) {
+                dprintln!("[INFO] Removing file {} from restore directory...", rest_file.display());
+                match std::fs::remove_file(rest_file) {
+                    Ok(_) => {},
+                    Err(e) => {
+                        dprintln!("[ERROR] Cannot remove file {}: {}", rest_file.display(), e);
+                        return Err(());
+                    }
+                }
+                if rest_file.parent().unwrap().read_dir().unwrap().next().is_none() {
+                    dprintln!("[INFO] Removing empty directory {}...", rest_file.parent().unwrap().display());
+                    match std::fs::remove_dir(rest_file.parent().unwrap()) {
+                        Ok(_) => {},
+                        Err(e) => {
+                            dprintln!("[ERROR] Cannot remove directory {}: {}", rest_file.parent().unwrap().display(), e);
+                            return Err(());
+                        }
+                    }
+                }
+            }
+        }*/
 
-        for file in files.iter() {
+        for file in commit_files.iter() {
             let commit_file_path = &file;
             let commit_file_diff = match pathdiff::diff_paths(&commit_file_path, &commit_path) {
                 Some(diff) => diff,
@@ -285,6 +311,7 @@ impl Repo {
             };
 
             let restore_file_path = restore_path.join(&commit_file_diff);
+            // if the file exists in the restore directory, but not in the commit files, remove it
 
             dprintln!("[INFO] Copying commit file {} to restore directory {}...", commit_file_path.display(), restore_file_path.display());
             if !restore_file_path.parent().unwrap().exists() {
