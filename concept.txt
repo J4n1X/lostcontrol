@@ -1,0 +1,11 @@
+The concept is a local-only version control system without the bullshit. This means it can:
+  - Stage Changes
+  - Commit Changes
+  - Create Branches
+  - Merge Branches
+  - Delete Branches
+  - (Be better than git and actually support folders)
+  
+We could use libFCT4 to store commits. It could also contain commit metadata as a file at the start of the container, or maybe even as a single chunk.
+The folder support would require an extension to the FCT4 format.
+Branches could easily be realized by just modifying metadata.

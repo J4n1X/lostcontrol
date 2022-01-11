@@ -1,0 +1,16 @@
+[package]
+name = "lostcontrol"
+version = "0.1.0"
+edition = "2021"
+author = ["Janick Eicher"]
+license = "MIT"
+description = "A simple version control system for those who don't want to use git."
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = { version = "1.0.133", features = ["derive"] }
+serde_yaml = "0.8.23"
+walkdir = "2"
+chrono = "0.4.19"
+pathdiff = "0.1.0"
