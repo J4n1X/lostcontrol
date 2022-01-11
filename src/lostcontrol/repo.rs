@@ -270,9 +270,14 @@ impl Repo {
             return Err(());
         }
 
-        let restore_path = std::fs::canonicalize(std::env::current_dir().unwrap()).unwrap();
+        let restore_path = std::env::current_dir().unwrap();
         let branch_path = self.repos_dir.clone().join(self.current_branch.clone());
-        let commit_path = branch_path.join(self.format_branch_dir(&self.get_branch(&self.current_branch).unwrap(), commit_id));
+        let branch_config = match self.get_branch(&self.current_branch) {
+            Ok(config) => config,
+            Err(()) => return Err(())
+        };
+        
+        let commit_path = branch_path.join(self.format_branch_dir(&branch_config, commit_id));
         dprintln!("[INFO] Restoring commit directory {}...", commit_path.display());
         let commit_files = expand_directory(&commit_path, &Vec::new());
         let restore_dir_files = expand_directory(&restore_path, &self.ignored_files);
