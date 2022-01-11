@@ -240,13 +240,7 @@ impl Repo {
         }
 
         let branch_path = self.repos_dir.clone().join(self.current_branch.clone());
-        let mut branch_config_path = branch_path.join(self.current_branch.clone());
-        branch_config_path.set_extension("conf");
-
-        let mut branch_config = match BranchConfig::from_file(&branch_config_path) {
-            Ok(config) => config,
-            Err(()) => return Err(())
-        };
+        let mut branch_config = self.get_branch(&self.current_branch).unwrap();
 
         // remove commit directory
         let commit_path = branch_path.join(self.format_branch_dir(&branch_config, commit_id));

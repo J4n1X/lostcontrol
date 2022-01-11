@@ -1,6 +1,8 @@
 # Lostcontrol Version Control System
 This is a simple version control system because I grew a bit tired of git
 
+**ATTENTION:** This program is not yet cross-platform and only works on Linux
+
 ## Commands
 
 ### help

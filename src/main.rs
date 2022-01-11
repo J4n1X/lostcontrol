@@ -309,6 +309,7 @@ fn main() {
                 if args.len() > 2 {
                     match args[2].as_str() {
                         _ => {
+                            // TODO: Implement branch commands
                             todo!();
                         }
                     }
@@ -331,11 +332,3 @@ fn main() {
         exit(1);
     }
 }
-
-/* fn main1() {
-    let mut test_branch = BranchConfig::new(String::from("test"));
-    test_branch.commits.push(Commit::new(0, String::from("test commit")));
-    test_branch.close();
-    test_branch = BranchConfig::from_file(&PathBuf::from("test.yml")).unwrap();
-    println!("{:#?}", test_branch);
-} */
